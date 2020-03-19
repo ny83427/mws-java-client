@@ -1,28 +1,13 @@
 ## Amazon MWS API Java Client
 
 Amazon provides MWS API [Java Client Libraries](https://developer.amazonservices.com/javaclients) in a way that is not friendly for Maven based projects.
-I've tried to re-use [mws-client](https://mvnrepository.com/artifact/amazon/mws-client/1.0) in Maven Central, only to find that the repository url is 
-invalid. Finally, I had to spent some time to build my own module and set the dependencies according to its third-party libraries.
+I've tried to re-use [mws-client](https://mvnrepository.com/artifact/amazon/mws-client/1.0) in Maven Central, only to find that one was invalid for a long time. Finally, I chose to spent some time to build my own module and set the dependencies according to its third-party libraries. Feel free to use it.
 
 ## How to Use
-
-As I didn't deploy this library to Maven Central but to our own private Nexus only, you need to declare repositories in your POM file:
-
-```xml
-<repositories>
-  <repository>
-    <id>releases</id>
-    <url>http://nexus.ibport.com:8082/nexus/content/repositories/releases</url>
-  </repository>
-</repositories>
-```
-
-And then add the dependency:
-
 ```xml
 <dependency>
-  <groupId>com.amazonaws</groupId>
-  <artifactId>mws</artifactId>
+  <groupId>com.github.ny83427</groupId>
+  <artifactId>mws-java-client</artifactId>
   <version>1.0</version>
 </dependency>
 ```
@@ -47,10 +32,9 @@ log4j.logger.com.amazonaws.mws=DEBUG
 log4j.logger.httpclient=DEBUG
 ```
 
-## Future Work
+## Disclaimer
 
-It might be helpful to other developers if we deploy this to Maven Central. However, there might be some copyright issue.
-Let's check it out in the future.
+I created this repository and deploy to Maven Central only in the purpose of convenience of the community. The copy right of the code belongs to Amazon, not myself. It's always OK to download the distribution in official website and set dependencies yourself if you have some concern on license or copy right issue.
 
 
 

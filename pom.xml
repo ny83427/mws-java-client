@@ -4,26 +4,101 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.amazonaws</groupId>
-  <artifactId>mws</artifactId>
+  <groupId>com.github.ny83427</groupId>
+  <artifactId>mws-java-client</artifactId>
   <version>1.0</version>
-  <description>Amazon MWS API</description>
+  <packaging>jar</packaging>
+  
+  <name>mws-java-client</name>
+  <description>Amazon MWS API Java Client</description>
+  <url>https://github.com/ny83427/mws-java-client</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <nexus.server.prefix>nexus.ibport.com:8082/nexus/content/repositories</nexus.server.prefix>
   </properties>
 
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <!-- All the code of API client belongs to Amazon  -->
+    <developer>
+      <name>Amazon MWS</name>
+      <email>mws@amazon.com</email>
+      <organization>Amazon</organization>
+      <organizationUrl>https://docs.developer.amazonservices.com/</organizationUrl>
+    </developer>
+    <!-- I just convert it to a Maven Module for better re-usage -->
+    <developer>
+      <name>Nathanael Yang</name>
+      <email>ny83427@gmail.com</email>
+      <organization>Java Never Sleep</organization>
+      <organizationUrl>https://www.javaneversleep.com/</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git://github.com/ny83427/mws-java-client.git</connection>
+    <developerConnection>scm:git:ssh://github.com:ny83427/mws-java-client.git</developerConnection>
+    <url>http://github.com/ny83427/mws-java-client/tree/master</url>
+  </scm>
+
   <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
     <repository>
-      <id>releases</id>
-      <name>Nexus Release Repository</name>
-      <url>http://${nexus.server.prefix}/releases</url>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
 
+  <profiles>
+    <profile>
+      <id>disable-java8-doclint</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <properties>
+        <additionalparam>-Xdoclint:none</additionalparam>
+      </properties>
+    </profile>
+  </profiles>
+
   <build>
     <plugins>
+      <!-- deploy components to OSSRH and release them to the Central Repository -->
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.8</version>
+        <extensions>true</extensions>
+        <configuration>
+           <serverId>ossrh</serverId>
+           <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+           <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
+      </plugin>
+      <!-- The Maven GPG plugin is used to sign the components -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -37,13 +112,25 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.2.1</version>
+        <version>3.0.1</version>
         <executions>
           <execution>
             <id>attach-sources</id>
-            <phase>verify</phase>
             <goals>
               <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.4</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
             </goals>
           </execution>
         </executions>
@@ -65,7 +152,7 @@
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
-      <version>4.2.6</version>
+      <version>4.3.6</version>
     </dependency>
     <dependency>
       <groupId>commons-httpclient</groupId>
